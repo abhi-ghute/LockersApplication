@@ -2,6 +2,8 @@ package com.lockers;
 
 import java.util.Scanner;
 
+import com.lockers.operations.FileNames;
+
 public class LokersApplication {
 
 	public static void main(String[] args) {
@@ -21,6 +23,10 @@ public class LokersApplication {
 			
 			int choice = sc.nextInt();
 			
+			if(choice==1) {
+				FileNames f = new FileNames();
+				f.getFileNames();
+			}
 			if(choice==3) {
 				break;
 			}
