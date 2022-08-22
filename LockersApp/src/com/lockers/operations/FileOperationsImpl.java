@@ -11,7 +11,7 @@ import java.util.Scanner;
 public class FileOperationsImpl implements FileOperations {
 
 	@Override
-	public void getFileNames(String directoryPath) {
+	public String[] getFileNames(String directoryPath) {
 
 		String[] fNames = null;
 		File file = new File(directoryPath);
@@ -25,15 +25,22 @@ public class FileOperationsImpl implements FileOperations {
 			System.out.println("Specified Folder is not present in your system... want to create(y/n)");
 
 			Scanner sc = new Scanner(System.in);
-			char choice = sc.next().toLowerCase().charAt(0);
-			sc.close();
+			String temp = sc.nextLine().toLowerCase();
+			while(temp.length()>1)
+			{
+				System.out.println("Invalid Input...Input length must be 1 character");
+				System.out.println("Specified Folder is not present in your system... want to create(y/n)");
+				temp = sc.nextLine().toLowerCase();
+			}
+			char choice = temp.charAt(0);
 
 			if (choice == 'y') {
 				file.mkdir();
 				fNames = file.list();
-			} else {
-				System.out.println("Please specify another directory path");
-				return;
+				System.out.println("Directory creatred with "+directoryPath);
+			} else{
+				System.out.println("Please specify another directory path or try with valid input value");
+				return fNames;
 			}
 
 		}
@@ -45,44 +52,70 @@ public class FileOperationsImpl implements FileOperations {
 		Arrays.sort(fNames);
 		for (int i = 0; i < fNames.length; i++)
 			System.out.println(fNames[i]);
+		
+		return fNames;
 	}
 
 	@Override
-	public void addFile(String directoryPath, String fileName) {
-
+	public String addFile(String directoryPath, String fileName) {
+		
+		char choice=' ';
 		Path path = Paths.get(directoryPath, fileName);
-
+		
 		try {
-			Path createdFilePath = Files.createFile(path);
-			System.out.println("Created a file at : " + createdFilePath);
+			if(Files.exists(path) == true) {
+				System.out.println("File is already presnt you want to replace existing..(y/n)");
+				
+				Scanner sc = new Scanner(System.in);
+				String temp = sc.nextLine().toLowerCase();
+				while(temp.length()>1)
+				{
+					System.out.println("Invalid Input...Input length must be 1 character");
+					System.out.println("File is already presnt you want to replace existing..(y/n)");
+					temp = sc.nextLine().toLowerCase();
+				}
+				choice = temp.charAt(0);
+				if (choice == 'y') {
+					Files.delete(path);
+				} else{
+					return "Existing file is not replaced...please try with another file";
+				}
+
+			}
+			Files.createFile(path);
 		} catch (IOException e) {
 			e.printStackTrace();
+			return "Error occurred during file creation";
 		}
+		return path.toString();
 
 	}
 
 	@Override
-	public void deleteFile(String directoryPath, String fileName) {
+	public String deleteFile(String directoryPath, String fileName) {
 
 		Path path = Paths.get(directoryPath, fileName);
 
 		try {
 			Files.delete(path);
-			System.out.println("File Deleted from the Directory" + path);
+			return "File Deleted from the Directory" + path;
 		} catch (IOException e) {
-			e.printStackTrace();
+			return "Specified file is not present in the Directory "+path;
 		}
-
+	
 	}
 
 	@Override
-	public void searchFile(String directoryPath, String fileName) {
+	public boolean searchFile(String directoryPath, String fileName) {
+		
+		boolean flag = false;
 		Path path = Paths.get(directoryPath, fileName);
 		try {
-			boolean flag = Files.exists(path);
-			System.out.println(flag);
+			flag = Files.exists(path);
+			return flag;
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		return flag;
 	}
 }
