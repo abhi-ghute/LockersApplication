@@ -1,7 +1,6 @@
 package com.lockers;
 
 import java.io.IOException;
-import java.util.InputMismatchException;
 import java.util.Scanner;
 
 import com.lockers.operations.FileOperations;
@@ -17,16 +16,19 @@ public class LokersApplication {
 
 		Scanner sc = new Scanner(System.in);
 
-		System.out.println("============Welcome to the Lockers Application============\n");
-
-		System.out.println("Application Name: Lockers File Application");
-		System.out.println("Developed by: Abhishek Ghute");
+		System.out.println("============Welcome to the Lockers Application============");
+		System.out.println("**							**");
+		System.out.println("**	Application Name: Lockers File Application	**");
+		System.out.println("**	Developed by: Abhishek Ghute			**");
+		System.out.println("**							**");
+		System.out.println("***********************************************************\n");
 
 		loopLabel: while (true) {
+			System.out.println("Select your choice...");
 			System.out.println("1.Show files");
 			System.out.println("2.Perform File Operations");
 			System.out.println("3.Exit from the Applicatiion");
-			
+			System.out.println();
 			System.out.println("Enter Option:");
 			int choice =0;
 			while(true) {
@@ -38,10 +40,18 @@ public class LokersApplication {
 					sc.nextLine();
 				}
 			}
-		
+			System.out.println();
 			switch (choice) {
 			case 1:
-				fileOperations.getFileNames(directoryPath);
+				String[] fNames =fileOperations.getFileNames(directoryPath);
+				if (fNames.length == 0) {
+					System.out.println("No file present inside the folder..");
+				}else {
+					System.out.println("List of files present inside the folder..");
+					for (int i = 0; i < fNames.length; i++)
+						System.out.println(fNames[i]);
+				}
+				System.out.println();
 				break;
 
 			case 2:
@@ -73,9 +83,11 @@ public class LokersApplication {
 			System.out.println("B.Delete File");
 			System.out.println("C.Search File");
 			System.out.println("D.Main Dashboard");
+			System.out.println();
 			System.out.println("Enter your choice");
 			
 			String temp = sc.nextLine().toLowerCase();
+			System.out.println();
 			while(temp.length()>1)
 			{
 				System.out.println("Invalid Input...Input length must be 1 character");
@@ -91,19 +103,26 @@ public class LokersApplication {
 			case 'a':
 				System.out.println("Enter File Name to add");
 				fileName = sc.nextLine();
-				fileOperations.addFile(directoryPath,fileName);
+				String addResult = fileOperations.addFile(directoryPath,fileName);
+				System.out.println(addResult);
 				break;
 
 			case 'b':
 				System.out.println("Enter File Name to delete");
 				fileName = sc.nextLine();
-				fileOperations.deleteFile(directoryPath, fileName);
+				String deleteResult = fileOperations.deleteFile(directoryPath, fileName);
+				System.out.println(deleteResult);
 				break;
 
 			case 'c':
 				System.out.println("Enter File Name to search");
 				fileName = sc.nextLine();
-				fileOperations.searchFile(directoryPath, fileName);
+				boolean flag = fileOperations.searchFile(directoryPath, fileName);
+				if(flag==true) {
+					System.out.println("File is present in the directory "+directoryPath);
+				}else {
+					System.out.println("File is not present in the directory "+directoryPath);
+				}
 				break;
 			
 			case 'd':
@@ -113,6 +132,7 @@ public class LokersApplication {
 				System.out.println("Enter correct choice..");
 				break;
 			}
+			System.out.println();
 		}
 	}
 }

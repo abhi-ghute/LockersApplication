@@ -44,14 +44,7 @@ public class FileOperationsImpl implements FileOperations {
 			}
 
 		}
-
-		if (fNames.length == 0) {
-			System.out.println("No file present inside the folder..");
-		}
-
 		Arrays.sort(fNames);
-		for (int i = 0; i < fNames.length; i++)
-			System.out.println(fNames[i]);
 		
 		return fNames;
 	}
@@ -87,7 +80,7 @@ public class FileOperationsImpl implements FileOperations {
 			e.printStackTrace();
 			return "Error occurred during file creation";
 		}
-		return path.toString();
+		return "File added in directory path "+path.toString();
 
 	}
 
@@ -97,10 +90,15 @@ public class FileOperationsImpl implements FileOperations {
 		Path path = Paths.get(directoryPath, fileName);
 
 		try {
-			Files.delete(path);
-			return "File Deleted from the Directory" + path;
+			if(Files.exists(path)) {
+				Files.delete(path);
+				return "File Deleted from the Directory" + path;
+			}
+			else 
+				return "FNF (File not found) at"+path;
+			
 		} catch (IOException e) {
-			return "Specified file is not present in the Directory "+path;
+			return "Error ocurred while deleting file "+path;
 		}
 	
 	}
